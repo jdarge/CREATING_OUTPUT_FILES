@@ -41,7 +41,7 @@ int main(void) {
 
     if(number >= 1000) return -1; // if the new number is too large. 
 
-    if(number != -1) {// check to see if we ever actually found an output###.txt file
+    if(number) {// check to see if we ever actually found an output###.txt file
 
     	sprintf(val, "%d", number);// convert the number into string format
     	int len = strlen(val);// see how many leading zero's are required
