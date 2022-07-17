@@ -3,17 +3,32 @@
 #include <string.h>
 #include <dirent.h>
 
+char* get_file_name();
+
 int main(void) {
 
-    char* outputName = (char*) malloc(sizeof(char) * 14); //output###.txt\0    
-    struct dirent **namelist;
+    char* outputFileName = get_file_name();
+
+    if(!outputFileName) return 1;
+
+    printf("%s%s%s\n", "\033[1m\033[32m", outputFileName, "\033[0m");// color coded print of the new files name.
+
+    FILE* outputFile = fopen(outputFileName, "w");// create the file
+    fprintf(outputFile, "");
+    fclose(outputFile);
+}
+
+char* get_file_name() {
+
+	char* outputName = (char*) malloc(sizeof(char) * 14); //output###.txt\0    
+	struct dirent **namelist;
     int n = scandir(".", &namelist, NULL, alphasort);// get a list of files in the CWD and store the file count in 'n'
 
     if(n<0) {// error getting directory information
-        return 1;
+        return NULL;
     }
 
-    int number = -1;// used to store the highest number, for making the directory name
+	int number = -1;// used to store the highest number, for making the directory name
     char val[4];// used to store the highest number, for making the directory name
     for(int i = 2; i < n; i++) {// i = 2, to ignore . and ..
     	if(strlen(namelist[i]->d_name) >= 9) {// check to see if the file can be output### (for out of bounds assurance)
@@ -39,7 +54,7 @@ int main(void) {
     
     number++; // this is the new number we will use
 
-    if(number >= 1000) return -1; // if the new number is too large. 
+    if(number >= 1000) return NULL; // if the new number is too large. 
 
     if(number) {// check to see if we ever actually found an output###.txt file
 
@@ -69,9 +84,9 @@ int main(void) {
     	strcpy(outputName, "output000.txt\0");
     }
 
-    printf("%s%s%s\n", "\033[1m\033[32m", outputName, "\033[0m");// color coded print of the new files name.
+    while(n--) {
+    	free(namelist[n]);
+    } free(namelist);
 
-    FILE* outputFile = fopen(outputName, "w");// create the file
-    fprintf(outputFile, "");
-    fclose(outputFile);
-}// DONE
+    return outputName;
+}
