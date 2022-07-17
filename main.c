@@ -7,7 +7,7 @@ int main(void) {
 
     char* outputName = (char*) malloc(sizeof(char) * 14); //output###.txt\0    
     struct dirent **namelist;
-    int n = scandir(".", &namelist, NULL, alphasort);// get a list of files in the CWD
+    int n = scandir(".", &namelist, NULL, alphasort);// get a list of files in the CWD and store the file count in 'n'
 
     if(n<0) {// error getting directory information
         return 1;
